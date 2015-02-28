@@ -70,3 +70,9 @@ function collide(node) {
     return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
   };
 }
+
+
+var buttonClick = function () {
+    var name = $("#textBox").val();
+    parseJSON(name);
+}
