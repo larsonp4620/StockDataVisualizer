@@ -1,6 +1,7 @@
-var queryServer = function() {
+var queryServer = function(callback) {
 	$.ajax({	type:"GET",
-				url: "127.0.0.1",
+				dataType: "json",
+				url: "BloomData",
 				error: 	function(xhr, status, error) {
 								var err = eval("(" + xhr.responseText + ")");
 								console.log(xhr);
@@ -8,10 +9,7 @@ var queryServer = function() {
 				port: 8888,
 				
 	}).done(	function (msg) {
-						alert("did something: "+ msg);
-						}
-				);
+					callback(msg)
+				});
 	
 }
-
-window.onload = queryServer();
