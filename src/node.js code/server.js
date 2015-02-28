@@ -9,8 +9,8 @@ function onRequest(request, response) {
 		//console.log(pathname == "/");
 	if(pathname == "/")
 	{
-		response.writeHead(200, {"Content-Type": "text/plain"});
-		response.write("Fetching Data Below: \n");
+		response.writeHead(200, {"Content-Type": "application/json"});
+		//response.write("Fetching Data Below: \n");
 		console.log("Called Search");
 		bloom.search(response);
 		
