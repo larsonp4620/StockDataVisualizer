@@ -1,0 +1,14 @@
+statusCode:  200
+headers:  { 'content-type': 'application/json',
+  'access-control-allow-origin': '*',
+  'access-control-allow-headers': 'Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, Api-Version, Response-Time',
+  'access-control-allow-methods': 'POST',
+  'access-control-expose-headers': 'Api-Version, Request-Id, Response-Time',
+  connection: 'close',
+  date: 'Sat, 28 Feb 2015 16:55:17 GMT',
+  server: 'blpapi-http',
+  'api-version': '1.0.0',
+  'request-id': '92b547b0-bf6a-11e4-8013-3f794eca908f',
+  'response-time': '86',
+  'transfer-encoding': 'chunked' }
+{"data":[{"securityData":{"security":"IBM US Equity","eidData":[],"sequenceNumber":0,"fieldExceptions":[],"fieldData":[{"date":"2012-01-03T00:00:00.000Z","PX_LAST":186.3,"OPEN":186.73},{"date":"2012-01-04T00:00:00.000Z","PX_LAST":185.54,"OPEN":185.57},{"date":"2012-01-05T00:00:00.000Z","PX_LAST":184.66,"OPEN":184.81}]}},{"securityData":{"security":"AAPL US Equity","eidData":[],"sequenceNumber":1,"fieldExceptions":[],"fieldData":[{"date":"2012-01-03T00:00:00.000Z","PX_LAST":58.7471,"OPEN":58.4857},{"date":"2012-01-04T00:00:00.000Z","PX_LAST":59.0629,"OPEN":58.5714},{"date":"2012-01-05T00:00:00.000Z","PX_LAST":59.7186,"OPEN":59.2786}]}}],"status":0,"message":"OK"}
