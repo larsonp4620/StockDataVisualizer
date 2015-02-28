@@ -1,6 +1,7 @@
 var http = require("http");
 var url = require("url");
 var bloom = require("./bloomQuery.js");
+var fs = require("fs");
 	
 function onRequest(request, response) {
 	
@@ -15,11 +16,18 @@ function onRequest(request, response) {
 		bloom.search(response);
 
 	}
-	else 
+	else //if(pathname != "/favicon.ico")
 	{
-				console.log("rendered a static page");
-				response.render('index.html');
-	}
+		if(pathname == "/")
+			pathname ="/index.html";
+		fs.readFile(pathname.slice(1),function(err,data) {
+			response.writeHead(200, {'Content-Type': 'text/html', 'Content-Length':data.length});
+			response.write(data);
+			response.end();
+	
+		});
+		
+	} 
 }
 
 http.createServer(onRequest).listen(8888);
