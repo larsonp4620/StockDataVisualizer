@@ -1,6 +1,7 @@
-var queryServer = function(callback) {
+var queryServer = function(queryName, callback) {
 	$.ajax({	type:"GET",
 				dataType: "json",
+				data: { "name": queryName },
 				url: "BloomData",
 				error: 	function(xhr, status, error) {
 								var err = eval("(" + xhr.responseText + ")");
