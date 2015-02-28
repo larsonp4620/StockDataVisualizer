@@ -1,19 +1,11 @@
 var queryServer = function() {
-	$.ajax({	type:"POST",
-				url: "https://http-api.openbloomberg.com/request?ns=blp&service=refdata&type=HistoricalDataRequest",
-				data: JSON.stringify({
-						"securities": ["IBM US Equity", "AAPL US Equity"],
-						"fields": ["PX_LAST", "OPEN"],
-						"startDate": "20120101",
-						"endDate": "20120105",
-						"periodicitySelection": "DAILY"}
-						),
+	$.ajax({	type:"GET",
+				url: "127.0.0.1",
 				error: 	function(xhr, status, error) {
 								var err = eval("(" + xhr.responseText + ")");
 								console.log(xhr);
 								},
-				port: 443,
-				
+				port: 8888,
 				
 	}).done(	function (msg) {
 						alert("did something: "+ msg);
