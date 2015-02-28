@@ -1,7 +1,7 @@
 var https = require('https');
 var fs = require('fs');
 
-var search = function(response) {
+var search = function(response,name) {
 	var host = process.argv[2] || "http-api.openbloomberg.com";
 	var port = 443
 	var data = "";
@@ -33,12 +33,13 @@ var search = function(response) {
 			console.log("finished fetching")
 		});
 	});
-
+	var securitiesString = name + " US Equity";
+	console.log("Querying for: " +securitiesString);
 	req.write(JSON.stringify( {
-		"securities": ["IBM US Equity", "AAPL US Equity", "ININ US Equity"],
+		"securities": [securitiesString],
 		"fields": ["PX_LAST", "OPEN"],
 		"startDate": "20120101",
-		"endDate": "20120105",
+		"endDate": "20120201",
 		"periodicitySelection": "DAILY"
 	}));
 	req.end();
