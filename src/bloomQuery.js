@@ -39,8 +39,8 @@ var search = function(response,name) {
 		"securities": [securitiesString],
 		"fields": ["PX_LAST", "OPEN"],
 		"startDate": "20120101",
-		"endDate": "20120201",
-		"periodicitySelection": "DAILY"
+		"endDate": "20120501",
+		"periodicitySelection": "WEEKLY"
 	}));
 	req.end();
 

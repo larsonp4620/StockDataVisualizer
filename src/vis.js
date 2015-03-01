@@ -1,36 +1,44 @@
 var width = window.innerWidth,
     height = window.innerHeight;
 
-var testArray = [[20, 30, 40], [10, 15, 10], [100, 50, 25]];
+var tempDispArray = [];
 var displayIndex=0;
 var color = ["#779ECB", "#B39EB5", "#F49AC2","#FFD1DC"];
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
-var singleArray = [];
+var dataArray = [];
+var animationStep = 100;
+var interval;
+var isLooping = false;
 createCircles();
 
 function updateCircles() {
     displayIndex++;
-    if (displayIndex >= testArray.length)
+    if (displayIndex >= tempDispArray[0].length)
         displayIndex = 0;
-    for (var i = 0; i < testArray.length; i++) {
-        singleArray[i].radius = testArray[i][displayIndex];
+
+    for (var i = 0; i < tempDispArray.length; i++) {
+        dataArray[i].radius = tempDispArray[i][displayIndex];
+        console.log(tempDispArray[i][displayIndex]);
     }
-    svg.selectAll("circle").data(singleArray);
+    svg.selectAll("circle").data(dataArray);
     svg.selectAll("circle").attr("r", function (d) { return d.radius; });
 }
 
-function createCircles() {
-    //var singleArray = [];
-    for (var i = 0; i < testArray.length; i++) {
-        singleArray.push({radius: testArray[i][0], x:width/testArray.length*((i+1)-1/2),y:height/2});
-    }
-    console.log(singleArray);
 
-    svg.selectAll("circle").data(singleArray)
-                            .enter().append("circle")
-    .attr("r", function (d) { return d.radius; })
+
+function createCircles() {
+    displayIndex = 0;
+    dataArray = [];
+    for (var i = 0; i < tempDispArray.length; i++) {
+        dataArray.push({ radius: tempDispArray[i][0], x: width / tempDispArray.length * ((i + 1) - 1 / 2), y: height / 2, dy: 0, dx: 0 });
+    }
+    console.log(dataArray);
+
+    svg.selectAll("circle").data(dataArray)
+                            .enter().append("circle");
+    svg.selectAll("circle").attr("r", function (d) { return d.radius; })
     .attr("cx", function (d) { return d.x; })
     .attr("cy", function (d) { return d.y;})
     .style("fill", function (d, i) { return color[i]; });
@@ -39,5 +47,20 @@ function createCircles() {
 
 var buttonClick = function () {
     var name = $("#textBox").val();
-    parseJSON(name);
+    parseJSON(name, function () {
+        tempDispArray = averagePrices;
+        createCircles();
+    });
+
+
+}
+
+var button2Click = function () {
+    if (isLooping) {
+        clearInterval(interval);
+        isLooping = false;
+    } else {
+        interval = setInterval(updateCircles, animationStep);
+        isLooping = true;
+    }
 }
