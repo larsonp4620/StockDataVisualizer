@@ -13,6 +13,7 @@ var svg = d3.select("body").append("svg")
 var dataArray = [];
 var textArray = [];
 
+var textHeight = 10;
 var animationStep = 100;
 var interval;
 var isLooping = false;
@@ -73,21 +74,23 @@ function updateCircles() {
     for (var i = 0; i < tempDispArray.length; i++) {
         dataArray[i].radius = tempDispArray[i][displayIndex];
 		
-		var circleText = names[i].substring(0, names[i].length - 10).trim();
-		textArray[i].text = circleText;
-		textArray[i].x = dataArray[i].x - circleText.length * 6;
+        //textArray[i].text = circleText;
+
+        //textArray[i].x = dataArray[i].x - circleText.length * 6;
+
         //console.log(tempDispArray[i][displayIndex]);
 		var change = calculateAverageChange(i);
-		console.log(change);
+		//console.log(change);
 		alterColor[i] = ColorLuminance(color[i], change/6);
     }
     svg.selectAll("circle").data(dataArray);
     svg.selectAll("circle").attr("r", function (d) { return d.radius; });
 	svg.selectAll("circle").style("fill", function (d, i) {return alterColor[i]; });
 	
-	svg.selectAll("text").data(textArray);
+	svg.selectAll("text").data(dataArray);
 	svg.selectAll("text").text( function (d, i) {return d.text});
-	svg.selectAll("text").attr("x",function (d) {return d.x});
+	svg.selectAll("text").attr("x", function (d) { return d.x });
+	svg.selectAll("text").attr("y", function (d) { return d.y + d.radius +10});
 }
 
 function createCircles() {
@@ -96,8 +99,11 @@ function createCircles() {
     for (var i = 0; i < tempDispArray.length; i++) {
 		color[i] = '#'+Math.floor(Math.random()*16777215).toString(16);
         dataArray.push({ radius: tempDispArray[i][0], x: width / tempDispArray.length * ((i + 1) - 1 / 2), y: height / 2, dy: 0, dx: 0 });
+
+        var circleText = names[i].substring(0, names[i].length - 10).trim();
+        dataArray[i].text = circleText;
     }
-    console.log(dataArray);
+    //console.log(dataArray);
 
     svg.selectAll("circle").data(dataArray)
                            .enter().append("circle");
@@ -108,19 +114,18 @@ function createCircles() {
     .style("fill", function (d, i) { return color[i]; });
 	
 	
-	for (var i = 0; i < tempDispArray.length; i++) {
-        textArray.push({x: (width / tempDispArray.length * ((i + 1) - 1 / 2)), y: height / 2, dy: 0, dx: 0 });
-	}
-	svg.selectAll("text").data(textArray)
+	//for (var i = 0; i < tempDispArray.length; i++) {
+    //    textArray.push({x: (width / tempDispArray.length * ((i + 1) - 1 / 2)), y: height / 2, dy: 0, dx: 0 });
+	//}
+	svg.selectAll("text").data(dataArray)
 						 .enter().append("text");
 						 
-	svg.selectAll("text").text( function (d) {return "";})
-	.attr("x",function (d) {return (d.x-this.getComputedTextLength()/2);})
-	.attr("y", function (d) { return d.y;})
-	.style("fill", "white")
+	svg.selectAll("text").text( function (d) {return d.text;})
+	.attr("x",function (d) {return d.x;})
+	.attr("y", function (d) { return d.y + d.radius+10; })
 	.attr("font-family", "sans-serif")
-	.attr("font-size", "25px")
-	.attr("fill", "black");
+	.attr("font-size", "25px");
+	svg.selectAll("text").style("fill", "white");
 	
 }
 
