@@ -25,10 +25,13 @@ function onRequest(request, response) {
 	}
 	else //if(pathname != "/favicon.ico")
 	{
+	    var contentType = "text/html";
 		if(pathname == "/")
-			pathname ="/index.html";
+		    pathname = "/index.html";
+		if (pathname == "/main.css")
+		    contentType = "text/css";
 		fs.readFile(pathname.slice(1),function(err,data) {
-			response.writeHead(200, {'Content-Type': 'text/html', 'Content-Length':data.length});
+			response.writeHead(200, {'Content-Type': contentType, 'Content-Length':data.length});
 			response.write(data);
 			response.end();
 	
