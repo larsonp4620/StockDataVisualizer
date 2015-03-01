@@ -7,5 +7,8 @@ var parseJSON = function(name){
 		names.push(upd.security);	
 		points.push(upd.fieldData);
 		alert(upd.security);
+		
+		if(names.length > 100)
+			names.shift();
 	});
 }
