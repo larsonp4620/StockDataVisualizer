@@ -1,5 +1,5 @@
-var width = 960,
-    height = 500;
+var width = window.innerWidth,
+    height = window.innerHeight-20;
 
 var nodes = d3.range(200).map(function() { return {radius: Math.random() * 12 + 4}; }),
     root = nodes[0];
@@ -32,6 +32,7 @@ force.on("tick", function(e) {
   context.clearRect(0, 0, width, height);
   context.fillStyle = "steelblue";
   context.beginPath();
+
   for (i = 1; i < n; ++i) {
     d = nodes[i];
     context.moveTo(d.x, d.y);

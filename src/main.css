@@ -1,0 +1,15 @@
+#banner {
+    height:40px;
+}
+
+h2 {
+    display:inline-block;
+}
+
+input {
+    display:inline-block;
+}
+
+body {
+    background-color:red;
+}
