@@ -74,6 +74,7 @@ var pushTowards = function(source, dest) {
 		dataArray[source].y = (dataArray[dest].y/10) - dataArray[source].y;
 	}
 }
+
 function updateCircles() {
 
     displayIndex++;
