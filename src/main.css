@@ -1,11 +1,14 @@
 body {
     margin:0px;
+	background-color:black;
 }
 
 #banner {
     position:relative;
     height:0px;
-    text-align:center;
+    text-align:left;
+	padding-left:30px;
+	color:white;
     font-family:sans-serif;
 }
 

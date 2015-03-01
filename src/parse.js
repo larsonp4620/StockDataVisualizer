@@ -33,7 +33,7 @@ var parseJSON = function(name,callback){
 		}
 		averagePrices.push(prices);
 		
-		alert(upd.security);
+		//alert(upd.security);
 		
 		if(names.length > 100)
 		    names.shift();
