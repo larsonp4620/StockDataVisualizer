@@ -18,6 +18,10 @@ var animationStep = 100;
 var interval;
 var isLooping = false;
 
+var predatorIndex = 0;
+var preyIndex = 0;
+var preyCaught = false;
+
 createCircles();
 
 var ColorLuminance = function(hex, lum) {
@@ -65,24 +69,36 @@ var calculateAverageChange = function(i) {
 	return returnMe;
 }
 
+var pushTowards = function(source, dest) {
+	if(source != dest){
+		dataArray[source].x = (dataArray[dest].x/10) - dataArray[source].x;
+		dataArray[source].y = (dataArray[dest].y/10) - dataArray[source].y;
+	}
+}
+
 function updateCircles() {
     if (false) {
         displayIndex++;
         if (displayIndex >= tempDispArray[0].length)
             displayIndex = 0;
-
+		
+		var min = calculateAverageChange(0);
+		var max = 0;
         for (var i = 0; i < tempDispArray.length; i++) {
             dataArray[i].radius = tempDispArray[i][displayIndex];
-
-            //textArray[i].text = circleText;
-
-            //textArray[i].x = dataArray[i].x - circleText.length * 6;
-
-            //console.log(tempDispArray[i][displayIndex]);
             var change = calculateAverageChange(i);
-            //console.log(change);
+			
+			if(change > max){
+				max = change;
+				predatorIndex = i;
+			} else if(change < min) {
+				min = change;
+				preyIndex = i;
+			}
+			
             alterColor[i] = ColorLuminance(color[i], change / 6);
         }
+		
         svg.selectAll("circle").data(dataArray);
         svg.selectAll("circle").attr("r", function (d) { return d.radius; });
         svg.selectAll("circle").style("fill", function (d, i) { return alterColor[i]; });
@@ -92,6 +108,8 @@ function updateCircles() {
         svg.selectAll("text").attr("y", function (d) { return d.y + d.radius + 10 });
     } else 
     {
+		pushTowards(preyIndex, predatorIndex);
+		pushTowards(predatorIndex, preyIndex);
         force();
         applyForces();     
         svg.selectAll("circle").attr("cx", function (d) { return d.x; })
@@ -174,7 +192,7 @@ function createCircles() {
     displayIndex = 0;
     dataArray = [];
     for (var i = 0; i < tempDispArray.length; i++) {
-        color[i] = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        color[i] = '#'+Math.floor(Math.random()*(16777215 - 1000) + 1000).toString(16);
         dataArray.push({ radius: tempDispArray[i][0], x: width / tempDispArray.length * ((i + 1) - 1 / 2), y: height / 2, dy: 0, dx: 0, hasColided:false});
 
         var circleText = names[i].substring(0, names[i].length - 10).trim();
