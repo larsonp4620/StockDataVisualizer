@@ -10,7 +10,11 @@ var queryServer = function(queryName, callback) {
 				port: 8888,
 				
 	}).done(	function (msg) {
-					callback(msg)
+					if(msg.data[0].securityData.fieldData.length != 0){
+						callback(msg);
+					} else {
+						alert('Invalid company name. Try abbreviations like "ININ" for Interactive Intelligence.');
+					}
 				});
 	
 }
