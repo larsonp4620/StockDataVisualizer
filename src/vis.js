@@ -66,39 +66,116 @@ var calculateAverageChange = function(i) {
 }
 
 function updateCircles() {
+    if (false) {
+        displayIndex++;
+        if (displayIndex >= tempDispArray[0].length)
+            displayIndex = 0;
 
-    displayIndex++;
-    if (displayIndex >= tempDispArray[0].length)
-        displayIndex = 0;
+        for (var i = 0; i < tempDispArray.length; i++) {
+            dataArray[i].radius = tempDispArray[i][displayIndex];
 
-    for (var i = 0; i < tempDispArray.length; i++) {
-        dataArray[i].radius = tempDispArray[i][displayIndex];
-		
-        //textArray[i].text = circleText;
+            //textArray[i].text = circleText;
 
-        //textArray[i].x = dataArray[i].x - circleText.length * 6;
+            //textArray[i].x = dataArray[i].x - circleText.length * 6;
 
-        //console.log(tempDispArray[i][displayIndex]);
-		var change = calculateAverageChange(i);
-		//console.log(change);
-		alterColor[i] = ColorLuminance(color[i], change/6);
+            //console.log(tempDispArray[i][displayIndex]);
+            var change = calculateAverageChange(i);
+            //console.log(change);
+            alterColor[i] = ColorLuminance(color[i], change / 6);
+        }
+        svg.selectAll("circle").data(dataArray);
+        svg.selectAll("circle").attr("r", function (d) { return d.radius; });
+        svg.selectAll("circle").style("fill", function (d, i) { return alterColor[i]; });
+
+        svg.selectAll("text").data(dataArray);
+        svg.selectAll("text").attr("x", function (d) { return d.x });
+        svg.selectAll("text").attr("y", function (d) { return d.y + d.radius + 10 });
+    } else 
+    {
+        force();
+        applyForces();     
+        svg.selectAll("circle").attr("cx", function (d) { return d.x; })
+        .attr("cy", function (d) { return d.y; });
+        svg.selectAll("text").attr("x", function (d) { return d.x }).attr("y", function (d) { return d.y + d.radius + 10 });
     }
-    svg.selectAll("circle").data(dataArray);
-    svg.selectAll("circle").attr("r", function (d) { return d.radius; });
-	svg.selectAll("circle").style("fill", function (d, i) {return alterColor[i]; });
-	
-	svg.selectAll("text").data(dataArray);
-	svg.selectAll("text").text( function (d, i) {return d.text});
-	svg.selectAll("text").attr("x", function (d) { return d.x });
-	svg.selectAll("text").attr("y", function (d) { return d.y + d.radius +10});
+}
+function force() {
+    for (var i = 0; i < tempDispArray.length; i++) {
+        if (dataArray[i].x  > 2 * width / 3) {
+            dataArray[i].dx += -1;
+        }
+        if (dataArray[i].x  < width / 3) {
+            dataArray[i].dx += +1;
+        }
+        if (dataArray[i].y  > 2 * height / 3) {
+            dataArray[i].dy += -1;
+        }
+        if (dataArray[i].y  < height / 3) {
+            dataArray[i].dy += +1;
+        }
+        if (isNaN(dataArray[i].dx))
+            dataArray[i].dx = 0;
+        if (isNaN(dataArray[i].dy))
+            dataArray[i].dy = 0;
+
+        dataArray[i].dx = 0.90*dataArray[i].dx;
+        dataArray[i].dy = 0.90*dataArray[i].dy;
+    }
+}
+function applyForces() {
+    for (var i = 0; i < tempDispArray.length; i++) {
+        dataArray[i].x += dataArray[i].dx;
+        dataArray[i].y += dataArray[i].dy;
+        checkColisions(i);
+    }
+}
+
+function checkColisions(i) {
+
+    var e1 = dataArray[i];
+    var localColision = false;
+    for (var j = 0; j < tempDispArray.length; j++) {
+        if (i != j) {
+            var e2 = dataArray[j];
+            
+            var distance = Math.sqrt(((e1.x + e1.radius) - (e2.x + e2.radius)) * ((e1.x + e1.radius) - (e2.x + e2.radius)) + ((e1.y + e1.radius) - (e2.y + e2.radius)) * ((e1.y + e1.radius) - (e2.y + e2.radius)));
+            var minDistance = (e1.radius + e2.radius);
+            if (distance < minDistance && e1.hasColided == false) {
+                localColision = true;
+                console.log("collided");
+                //e1.x -= e1.dx;
+                //e1.y -= e1.dy;
+                e1.dx = -e1.dx;
+                e1.dy = -e1.dy;
+                //e2.dx = -e2.dx;
+                //e2.dy = -e2.dy;
+                var temp = e1.dx;
+                e1.dx = e1.dy;
+                e1.dy = temp;
+                e1.hasColided = true;
+                //temp = e2.dx;
+                //e2.dx = e2.dy;
+                //e2.dy = temp;
+                dataArray[i] = e1;
+                dataArray[j] = e2;
+            } else if (e1.hasColided) {
+                e1.dx*=1.12;
+                e1.dy*=1.12;
+                dataArray[i] = e1;
+            }
+        }
+    }
+    e1.hasColided = localColision
+    
+
 }
 
 function createCircles() {
     displayIndex = 0;
     dataArray = [];
     for (var i = 0; i < tempDispArray.length; i++) {
-		color[i] = '#'+Math.floor(Math.random()*16777215).toString(16);
-        dataArray.push({ radius: tempDispArray[i][0], x: width / tempDispArray.length * ((i + 1) - 1 / 2), y: height / 2, dy: 0, dx: 0 });
+        color[i] = '#' + Math.floor(Math.random() * 16777215).toString(16);
+        dataArray.push({ radius: tempDispArray[i][0], x: width / tempDispArray.length * ((i + 1) - 1 / 2), y: height / 2, dy: 0, dx: 0, hasColided:false});
 
         var circleText = names[i].substring(0, names[i].length - 10).trim();
         dataArray[i].text = circleText;
